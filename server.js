@@ -24,24 +24,35 @@ app.get('/admin/grandmaster',(req,res)=>{
 })
 
 app.post('/admin/grandmaster-submit',(req,res)=>{
-    console.log(req.body.room1)
-    console.log(req.body.room2)
-    const var_room1 = req.body.room1
-    const var_room2 =  req.body.room2
-    const rooms = [var_room1,var_room2]
-    console.log(typeof(rooms))
-    res.render('room',{roomid : rooms })
+    const room1id = req.body.room1
+    const room2id = req.body.room2
+    console.log(room1id,room2id)
+    res.render('grandmaster-submit',{room1 : room1id , room2 : room2id})
 })
+
 
 io.on('connection',(socket) =>{
     console.log("user connected");
     socket.on('join-room',(roomId, userID) =>{
         console.log(roomId,userID);
+        if(typeof(roomId) == 'object'){
+            rooms = roomId
+            socket.join(rooms,()=>{
+                console.log('Grandmaster joined')
+                io.to(rooms[0]).to(rooms[1]).emit('new-user-joined',userID)
+            })
+        
+            socket.on('disconnect',()=>{
+                    console.log('User disconnected grandmaster call')
+                    socket.to(roomId).broadcast.emit('user-disconnected',userID)
+            })
+        
+            }
         socket.join(roomId,()=>{
             io.to(roomId).emit('new-user-joined',userID)
         })
         socket.on('disconnect',()=>{
-            console.log('User disconnected')
+            console.log('User disconnected groups')
             socket.to(roomId).broadcast.emit('user-disconnected',userID)
         })
     })

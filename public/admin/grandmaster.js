@@ -1,3 +1,6 @@
+console.log("id 1 is "+ROOMID1)
+console.log("id 2 is "+ROOMID2)
+
 var socket = io('/')
 var peer = new Peer();
 
@@ -8,7 +11,7 @@ const peers = {}
 //New user is joining the room
 peer.on('open',(id)=>{
     console.log("This si my user id"+id);
-    socket.emit('join-room',ROOMID,id);
+    socket.emit('join-room',[ROOMID1,ROOMID2],id);
 })
 
 const myvideo = document.createElement('video');
@@ -35,9 +38,9 @@ navigator.mediaDevices.getUserMedia({
     })
 })
 
-socket.on('user-disconnected',(userID)=>{
+socket.on('user-disconnected',(userid)=>{
     //console.log(userid)
-    if(peers[userID]){peers[userID].close()}
+    if(peers[userid]){peers[userid].close()}
 })
 
 function connectToNewUser(userid, stream){
