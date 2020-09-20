@@ -10,3 +10,11 @@
   
 ## Bugs to address
 - When user hangs up the video sometime doesnt removes from the screen
+
+## Execute
+- /project/directory -> nodemon server.js
+- ### To make httptunnel
+  - (silvermacbook) Downloads -> ./ngrok http 3030
+  
+## Note
+Login with rohit123sinha456@gmail.com in ngrok to fethch authtoken if needed
